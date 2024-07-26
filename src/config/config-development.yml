@@ -1,0 +1,21 @@
+server:
+  internalPort: 8008
+  externalPort: 8008
+  runMode: debug
+cors:
+  allowOrigins: "*"
+postgres:
+  host: ep-solitary-limit-a7pym10o.ap-southeast-2.aws.neon.tech
+  port: 5432
+  user: safeplatedb_user
+  password: "postgresPassword"
+  dbName: safeplatedb
+  sslMode: require
+  maxIdleConns: 15
+  maxOpenConns: 100
+  connMaxLifetime: 5
+jwt:
+  secret: "mySecretKey"
+  refreshSecret: "mySecretKey"
+  accessTokenExpireDuration: 1440
+  refreshTokenExpireDuration: 60
