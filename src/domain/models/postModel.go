@@ -8,7 +8,7 @@ type Post struct {
 	gorm.Model
 
 	Content      string
-	User         User `gorm:"foreignKey:UserId;constraint:OnUpdate:NO ACTION;OnDelete:NO ACTION"`
-	UserID       int
+	UserID       uint `gorm:"not null"`
+	User         User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	LockedToTeam bool
 }

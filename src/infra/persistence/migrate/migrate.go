@@ -11,24 +11,18 @@ func Up1() {
 	createTables(database.GetDb())
 }
 
-func createTables(database *gorm.DB) {
-	tables := []interface{}{}
-
-	//User
-	tables = addNewTable(database, models.User{}, tables)
-
-	//Post
-	tables = addNewTable(database, models.Post{}, tables)
-
-	err := database.Migrator().CreateTable(tables...)
-	if err != nil {
-		panic("Failed to migrate DB")
+func createTables(db *gorm.DB) {
+	tables := []interface{}{
+		models.User{},
+		models.Post{},
 	}
-}
 
-func addNewTable(database *gorm.DB, model interface{}, tables []interface{}) []interface{} {
-	if !database.Migrator().HasTable(model) {
-		tables = append(tables, model)
+	for _, table := range tables {
+		if !db.Migrator().HasTable(table) {
+			err := db.Migrator().CreateTable(table)
+			if err != nil {
+				panic("Failed to create table: " + err.Error())
+			}
+		}
 	}
-	return tables
 }
