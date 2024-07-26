@@ -18,8 +18,6 @@ func InitDb(cfg *config.Config) error {
 		cfg.Postgres.Host, cfg.Postgres.User, cfg.Postgres.Password,
 		cfg.Postgres.DbName, cfg.Postgres.Port, cfg.Postgres.SSLMode)
 
-	fmt.Println(cnn)
-
 	dbClient, err = gorm.Open(postgres.Open(cnn), &gorm.Config{})
 	if err != nil {
 		return err

@@ -5,11 +5,11 @@ server:
 cors:
   allowOrigins: "*"
 postgres:
-  host: ep-solitary-limit-a7pym10o.ap-southeast-2.aws.neon.tech
+  host: ep-polished-wind-a7q9wvj3.ap-southeast-2.aws.neon.tech
   port: 5432
-  user: safeplatedb_user
+  user: default
   password: "postgresPassword"
-  dbName: safeplatedb
+  dbName: verceldb
   sslMode: require
   maxIdleConns: 15
   maxOpenConns: 100

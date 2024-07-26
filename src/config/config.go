@@ -38,26 +38,38 @@ type CorsConfig struct {
 }
 
 func GetConfig() *Config {
+	// Load environment variables from .env file
 	cfgPath := getConfigPath(os.Getenv("APP_ENV"))
 	v, err := LoadConfig(cfgPath, "yml")
 	if err != nil {
-		log.Fatalf("Error in load config %v", err)
+		log.Fatalf("Error loading config: %v", err)
 	}
 
 	cfg, err := ParseConfig(v)
+	if err != nil {
+		log.Fatalf("Error parsing config: %v", err)
+	}
+
+	// Apply environment variable overrides
+	applyEnvOverrides(cfg)
+
+	// Set external port from environment if set
 	envPort := os.Getenv("PORT")
 	if envPort != "" {
 		cfg.Server.ExternalPort = envPort
 		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
 	} else {
 		cfg.Server.ExternalPort = cfg.Server.InternalPort
-		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
-	}
-	if err != nil {
-		log.Fatalf("Error in parse config %v", err)
+		log.Printf("Set external port from config -> %s", cfg.Server.ExternalPort)
 	}
 
 	return cfg
+}
+
+func applyEnvOverrides(cfg *Config) {
+	if envPassword := os.Getenv("POSTGRES_PASSWORD"); envPassword != "" {
+		cfg.Postgres.Password = envPassword
+	}
 }
 
 func ParseConfig(v *viper.Viper) (*Config, error) {
@@ -69,12 +81,13 @@ func ParseConfig(v *viper.Viper) (*Config, error) {
 	}
 	return &cfg, nil
 }
+
 func LoadConfig(filename string, fileType string) (*viper.Viper, error) {
 	v := viper.New()
 	v.SetConfigType(fileType)
 	v.SetConfigName(filename)
 	v.AddConfigPath(".")
-	v.AutomaticEnv()
+	v.AutomaticEnv() // Enables Viper to read environment variables
 
 	err := v.ReadInConfig()
 	if err != nil {

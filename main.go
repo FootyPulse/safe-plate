@@ -5,9 +5,13 @@ import (
 	"safe-plate/src/config"
 	"safe-plate/src/infra/persistence/database"
 	migration "safe-plate/src/infra/persistence/migrate"
+	"safe-plate/src/initializers"
 )
 
 func main() {
+
+	initializers.LoadEnvVariables()
+
 	cfg := config.GetConfig()
 
 	err := database.InitDb(cfg)
